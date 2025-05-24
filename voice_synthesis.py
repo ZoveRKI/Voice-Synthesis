@@ -8,6 +8,7 @@ HTML_FOLDER = "html"
 OUTPUT_FOLDER = "output"
 VOICE = "zh-CN-YunxiNeural"
 RATE = "+25%"
+MAX_CONCURRENT_TASKS = 10
 
 # 保证输出目录存在
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -19,19 +20,27 @@ def extract_text_from_html(file_path):
         return soup.get_text(strip=True)
 
 # 异步合成语音
-async def synthesize_to_mp3(text, output_path, rate='+0%'):
-    communicate = Communicate(text, VOICE, rate=rate)
-    await communicate.save(output_path)
+async def synthesize_to_mp3(text, output_path, rate='+0%', semaphore=None):
+    async with semaphore:
+        communicate = Communicate(text, VOICE, rate=rate)
+        await communicate.save(output_path)
+        print(f"完成合成: {output_path}")
 
 # 主流程
 async def main():
     html_files = glob.glob(os.path.join(HTML_FOLDER, "*.html"))
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_TASKS)
+    tasks = []
+
     for file_path in html_files:
         file_name = os.path.splitext(os.path.basename(file_path))[0]
         output_path = os.path.join(OUTPUT_FOLDER, f"{file_name}.mp3")
         text = extract_text_from_html(file_path)
         print(f"正在合成 {file_name}.mp3 ...")
-        await synthesize_to_mp3(text, output_path, RATE)
+        task = asyncio.create_task(synthesize_to_mp3(text, output_path, RATE, semaphore))
+        tasks.append(task)
+
+    await asyncio.gather(*tasks)
 
 # 执行
 if __name__ == "__main__":
