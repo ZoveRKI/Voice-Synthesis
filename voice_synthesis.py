@@ -9,7 +9,7 @@ HTML_FOLDER = "html"
 OUTPUT_FOLDER = "output"
 VOICE = "zh-CN-YunxiNeural"
 RATE = "+25%"
-MAX_CONCURRENT_TASKS = 10
+MAX_CONCURRENT_TASKS = 32
 
 # 保证输出目录存在
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
