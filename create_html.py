@@ -18,7 +18,7 @@ def generate_html_files(start, end, output_dir):
             continue
         pass
 
-        html_content = f"<!-- {i} -->\n<p>\n\n</p>"
+        html_content = f"<!-- {i} -->\n<p>\n</p>"
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(html_content)
         pass
@@ -34,9 +34,9 @@ pass
 
 if __name__ == "__main__":
     try:
-        start = int(input("请输入起始数字："))
-        end = int(input("请输入结束数字："))
-        output_dir = str(input("请输入输出目录（默认当前目录）：")).strip()
+        start = int(input("请输入起始数字: "))
+        end = int(input("请输入结束数字: "))
+        output_dir = str(input("请输入输出目录(默认当前目录): ")).strip()
 
         if start >= end:
             print("❌ 结束数字必须大于起始数字")
