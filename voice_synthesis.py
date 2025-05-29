@@ -50,13 +50,13 @@ async def main():
         pass
 
         text = extract_text_from_html(file_path)
-        print(f"正在合成 {file_name}.mp3 ...")
+        print(f"正在合成 {file_name} ...")
         task = asyncio.create_task(synthesize_to_mp3(text, output_path, RATE, semaphore))
         tasks.append(task)
         generated_count += 1
 
     await asyncio.gather(*tasks)
-    print(f"✅ 已生成 {generated_count}个HTML文件在目录: {OUTPUT_FOLDER}")
+    print(f"✅ 已生成 {generated_count}个MP3文件在目录: {OUTPUT_FOLDER}")
     if skipped_files:
         print(f"❌ 以下文件已存在，未覆盖：{', '.join(skipped_files)}")
     pass
