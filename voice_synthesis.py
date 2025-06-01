@@ -27,9 +27,12 @@ def extract_text_from_html(file_path):
 # 异步合成语音
 async def synthesize_to_mp3(text, output_path, rate='+0%', semaphore=None):
     async with semaphore:
-        communicate = Communicate(text, VOICE, rate=rate)
-        await communicate.save(output_path)
-        print(f"完成合成: {output_path}")
+        try:
+            communicate = Communicate(text, VOICE, rate=rate)
+            await communicate.save(output_path)
+            print(f"完成合成: {output_path}")
+        except Exception as e:
+            print(f"*合成失败: {output_path}，错误：{e}")
 
 # 主流程
 async def main():

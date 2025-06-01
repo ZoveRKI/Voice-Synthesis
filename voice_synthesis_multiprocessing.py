@@ -35,16 +35,21 @@ def worker(file_path):
     async def run_tts():
         communicate = Communicate(text, VOICE, rate=RATE)
         await communicate.save(output_path)
-        print(f"完成合成: {output_path}")
 
-    asyncio.run(run_tts())
-    return {"done": file_name}
+    try:
+        asyncio.run(run_tts())
+        print(f"完成合成: {output_path}")
+        return {"done": file_name}
+    except Exception as e:
+        print(f"*合成失败: {file_name}, 错误: {e}")
+        return {"error": file_name, "reason": str(e)}
 
 def main():
     html_files = glob.glob(os.path.join(HTML_FOLDER, "*.html"))
     html_files.sort(key=extract_number)
     generated_count = 0
     skipped_files = []
+    failed_files = []
 
     with multiprocessing.Pool(processes=NUM_PROCESSES) as pool:
         results = pool.map(worker, html_files)
@@ -54,11 +59,16 @@ def main():
             generated_count += 1
         elif r.get("skip"):
             skipped_files.append(r["skip"])
+        elif r.get("error"):
+            failed_files.append(f"{r['error']} ({r['reason']})")
 
     print(f"✅ 已生成 {generated_count} 个 HTML 文件在目录: {OUTPUT_FOLDER}")
     if skipped_files:
-        print(f"❌ 以下总计{len(skipped_files)}个文件已存在，未覆盖：{', '.join(skipped_files)}")
-    pass
+        print(f"✨ 以下总计{len(skipped_files)}个文件已存在，未覆盖：{', '.join(skipped_files)}")
+    if failed_files:
+        print(f"❌ 以下 {len(failed_files)} 个文件合成失败：")
+        for fail in failed_files:
+            print(f"   - {fail}")
 
 # 如果你在 Windows 上运行，请确保使用 if __name__ == "__main__": 包裹主逻辑，否则会报错。
 if __name__ == "__main__":
