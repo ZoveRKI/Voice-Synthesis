@@ -38,7 +38,7 @@ if __name__ == "__main__":
         end = int(input("请输入结束数字: "))
         output_dir = str(input("请输入输出目录(默认当前目录): ")).strip()
 
-        if start >= end:
+        if start > end:
             print("❌ 结束数字必须大于起始数字")
         else:
             generate_html_files(start, end, output_dir)
