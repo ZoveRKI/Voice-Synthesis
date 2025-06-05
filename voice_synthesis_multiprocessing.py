@@ -52,15 +52,13 @@ def main():
     failed_files = []
 
     with multiprocessing.Pool(processes=NUM_PROCESSES) as pool:
-        results = pool.map(worker, html_files)
-
-    for r in results:
-        if r.get("done"):
-            generated_count += 1
-        elif r.get("skip"):
-            skipped_files.append(r["skip"])
-        elif r.get("error"):
-            failed_files.append(f"{r['error']} ({r['reason']})")
+        for r in pool.imap_unordered(worker, html_files):
+            if r.get("done"):
+                generated_count += 1
+            elif r.get("skip"):
+                skipped_files.append(r["skip"])
+            elif r.get("error"):
+                failed_files.append(f"{r['error']} ({r['reason']})")
 
     print(f"✅ 已生成 {generated_count} 个 HTML 文件在目录: {OUTPUT_FOLDER}")
     if skipped_files:
