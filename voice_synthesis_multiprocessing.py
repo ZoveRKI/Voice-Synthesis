@@ -32,6 +32,11 @@ def worker(file_path):
 
     text = extract_text_from_html(file_path)
 
+    if len(text) > 3500:
+        too_long_error = "文本长度超过限制, 未进行合成"
+        print(f"未合成: {file_name}, 错误: {too_long_error}")
+        return {"error": file_name, "reason": too_long_error}
+
     async def run_tts():
         communicate = Communicate(text, VOICE, rate=RATE)
         await communicate.save(output_path)
