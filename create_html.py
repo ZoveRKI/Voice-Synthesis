@@ -35,7 +35,9 @@ pass
 if __name__ == "__main__":
     try:
         start = int(input("请输入起始数字: "))
+        # interval = int(input("请输入需要生成的文件数量: "))
         end = int(input("请输入结束数字: "))
+        # end = start + interval - 1
         output_dir = str(input("请输入输出目录(默认当前目录): ")).strip()
 
         if start > end:
