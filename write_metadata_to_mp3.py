@@ -8,6 +8,8 @@ options = {
     "🌟反派": {"album":"反派", "width": 4},
     "🌟七个神兽": {"album":"七个神兽", "width": 3},
     "🌟包围": {"album":"包围", "width": 3},
+    "🌟诛仙(旧版)": {"album":"诛仙(旧版)", "width": 3},
+    "🌟诛仙(新版)": {"album":"诛仙(新版)", "width": 3},
 }
 
 your_choice = questionary.select(
