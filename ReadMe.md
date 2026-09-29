@@ -30,3 +30,11 @@ or
 then:
 
     pip install moviepy
+
+# Use mise and uv
+```
+mise trust
+mise install
+
+uv sync --locked --python (mise which python | str trim)
+```
